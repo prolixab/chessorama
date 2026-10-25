@@ -1,9 +1,17 @@
-name: Deploy to GitHub Pages
+name: Check and deploy
 
+# Every push checks that the site builds and the lesson content is legal.
+# Deploying to GitHub Pages is manual (Actions → Check and deploy → Run workflow),
+# because Pages needs a public repository or a paid plan.
 on:
   push:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      deploy:
+        description: Deploy to GitHub Pages
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -15,11 +23,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -30,9 +35,19 @@ jobs:
       - run: npm ci --ignore-scripts
       - run: npm run vendor
       - run: node tools/validate.mjs --fast
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
+      - if: inputs.deploy
+        uses: actions/upload-pages-artifact@v3
         with:
           path: public
+
+  deploy:
+    if: inputs.deploy
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/configure-pages@v5
       - id: deployment
         uses: actions/deploy-pages@v4

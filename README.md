@@ -15,7 +15,7 @@ Then open <http://localhost:4321>. `npm install` also copies the browser builds 
 
 ## Hosting it as a website
 
-`public/` is a plain static site, so any static host works. Pushing to `main` runs `.github/workflows/pages.yml`, which installs the dependencies, copies the libraries into `public/vendor`, checks the content for legal moves, and publishes `public/` to GitHub Pages. (GitHub Pages must be enabled for the repository with **Source: GitHub Actions**.)
+`public/` is a plain static site, so any static host works. Every push to `main` runs `.github/workflows/pages.yml`, which installs the dependencies, copies the libraries into `public/vendor` and checks the content for legal moves. To publish `public/` to GitHub Pages, run that workflow by hand with **Deploy** ticked (Pages needs a public repository or a paid GitHub plan, with **Source: GitHub Actions**).
 
 To host it elsewhere, run `npm ci && npm run vendor` and upload the `public` folder.
 
