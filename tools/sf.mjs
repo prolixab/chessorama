@@ -4,7 +4,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
-const SF = path.join(here, '..', 'node_modules', 'stockfish', 'src', 'stockfish-nnue-16.js');
+const SF = path.join(here, '..', 'node_modules', 'stockfish', 'bin', 'stockfish-18-lite-single.js');
 
 export function startEngine() {
   const proc = spawn(process.execPath, [SF], { stdio: ['pipe', 'pipe', 'inherit'] });

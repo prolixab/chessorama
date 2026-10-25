@@ -1,4 +1,5 @@
-// User progress: saved to the local server (data/progress.json) with a localStorage copy as backup.
+// User progress, kept in this browser's localStorage. When the app runs on the bundled local server
+// (npm start), it is also saved to data/progress.json; on static hosting the browser copy is the only one.
 
 const LS_KEY = 'chessy.progress.v1';
 const START_RATING = 1000;
@@ -21,18 +22,21 @@ function blank() {
 
 let state = blank();
 let saveTimer = null;
-let serverOk = true;
+let serverOk = false;
 const listeners = new Set();
 
 export async function loadProgress() {
   let fromServer = null;
   try {
     const res = await fetch('api/progress', { cache: 'no-store' });
-    if (res.ok) fromServer = await res.json();
-    else serverOk = false;
-  } catch {
-    serverOk = false;
-  }
+    // Static hosts answer with a 404 page (or an HTML fallback), so only trust a JSON reply.
+    if (res.ok && res.headers.get('content-type')?.includes('json')) {
+      fromServer = await res.json();
+      serverOk = true;
+    }
+  } catch { /* no server: browser storage only */ }
+  // Ask the browser not to evict our storage when space runs low.
+  if (!serverOk) navigator.storage?.persist?.().catch(() => {});
   let fromLocal = null;
   try { fromLocal = JSON.parse(localStorage.getItem(LS_KEY)); } catch { /* storage unavailable */ }
   // Prefer whichever copy was saved most recently.
@@ -63,7 +67,9 @@ async function flush() {
 }
 
 export function storageStatus() {
-  return serverOk ? 'Saved to data/progress.json' : 'Saved in this browser only (server not reachable)';
+  return serverOk
+    ? 'Saved to data/progress.json and in this browser'
+    : 'Saved in this browser only — use "Download progress" below to keep a backup or move to another device';
 }
 
 function today() { return new Date().toISOString().slice(0, 10); }

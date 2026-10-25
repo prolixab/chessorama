@@ -11,7 +11,13 @@ npm install
 npm start
 ```
 
-Then open <http://localhost:4321>. `npm install` also copies the browser builds of the libraries into `public/vendor`.
+Then open <http://localhost:4321>. `npm install` also copies the browser builds of the libraries into `public/vendor` (about 7 MB, almost all of it the Stockfish engine).
+
+## Hosting it as a website
+
+`public/` is a plain static site, so any static host works. Pushing to `main` runs `.github/workflows/pages.yml`, which installs the dependencies, copies the libraries into `public/vendor`, checks the content for legal moves, and publishes `public/` to GitHub Pages. (GitHub Pages must be enabled for the repository with **Source: GitHub Actions**.)
+
+To host it elsewhere, run `npm ci && npm run vendor` and upload the `public` folder.
 
 ## What's in it
 
@@ -31,7 +37,9 @@ Then open <http://localhost:4321>. `npm install` also copies the browser builds 
 
 ## Where progress is stored
 
-Progress is saved to `data/progress.json` by the local server, with a copy in the browser's localStorage. The newest of the two wins on load.
+Progress is always kept in the browser's localStorage. On a static host that is the only copy: it stays on that device and browser, so use **Progress → Download progress** for a backup or to move to another device.
+
+When you run the bundled server (`npm start`), progress is also saved to `data/progress.json`, and the newer of the two copies wins on load.
 
 ## Project layout
 
@@ -77,4 +85,4 @@ Debugging: add `?debug` to the URL to turn off board animation and expose the bo
 
 ## Credits
 
-Board: [Chessground](https://github.com/lichess-org/chessground) (GPL-3.0) with the cburnett piece set. Rules: [chess.js](https://github.com/jhlywa/chess.js) (BSD-2). Engine: [Stockfish 16](https://github.com/nmrugg/stockfish.js) (GPL-3.0).
+Board: [Chessground](https://github.com/lichess-org/chessground) (GPL-3.0) with the cburnett piece set. Rules: [chess.js](https://github.com/jhlywa/chess.js) (BSD-2). Engine: [Stockfish 18 lite](https://github.com/nmrugg/stockfish.js) (GPL-3.0).

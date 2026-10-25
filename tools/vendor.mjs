@@ -13,9 +13,9 @@ const copies = [
   ['chessground/assets/chessground.base.css', 'chessground.base.css'],
   ['chessground/assets/chessground.brown.css', 'chessground.brown.css'],
   ['chessground/assets/chessground.cburnett.css', 'chessground.cburnett.css'],
-  ['stockfish/src/stockfish-nnue-16-single.js', 'stockfish/stockfish-nnue-16-single.js'],
-  ['stockfish/src/stockfish-nnue-16-single.wasm', 'stockfish/stockfish-nnue-16-single.wasm'],
-  ['stockfish/src/nn-5af11540bbfe.nnue', 'stockfish/nn-5af11540bbfe.nnue'],
+  // The lite single-threaded build: ~7 MB with the network built in, and no cross-origin isolation needed.
+  ['stockfish/bin/stockfish-18-lite-single.js', 'stockfish/stockfish-18-lite-single.js'],
+  ['stockfish/bin/stockfish-18-lite-single.wasm', 'stockfish/stockfish-18-lite-single.wasm'],
 ];
 
 for (const [from, to] of copies) {

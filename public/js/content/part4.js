@@ -121,12 +121,12 @@ export default {
               <li>No black knight on f6 (a pawn on e5 helps keep it away).</li>
               <li>Black can't easily cover g5 or h5.</li>
             </ul>`,
-          fen: 'r1bq1rk1/pppn1ppp/4p3/3pP3/3P4/2PB1N2/PP3PPP/RNBQK2R w KQ - 0 1',
+          fen: 'r1bq1rk1/pp1n1ppp/2n1p3/2ppP3/1b1P4/2NB1N2/PPP2PPP/R1BQ1RK1 w - - 0 1',
           moves: mv('Bxh7+ Kxh7 Ng5+ Kg8 Qh5', ['The Greek gift.', '', 'The knight joins with check.', '', 'Threatening Qh7#. Black\'s defence is very difficult.'], [[], [], [], [], ['h5h7:red']]),
         },
       ],
       exercises: [
-        { id: '4.6-1', type: 'move', rating: 1400, prompt: 'All the conditions are in place. Strike!', fen: 'r1bq1rk1/pppn1ppp/4p3/3pP3/3P4/2PB1N2/PP3PPP/RNBQK2R w KQ - 0 1', solution: ['Bxh7+'] },
+        { id: '4.6-1', type: 'move', rating: 1400, prompt: 'All the conditions are in place. Strike!', fen: 'r1bq1rk1/pp1n1ppp/2n1p3/2ppP3/1b1P4/2NB1N2/PPP2PPP/R1BQ1RK1 w - - 0 1', solution: ['Bxh7+'] },
       ],
     },
     {

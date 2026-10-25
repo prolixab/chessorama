@@ -1,6 +1,6 @@
 // Stockfish running in a Web Worker. Requests are queued so only one search runs at a time.
 
-const WORKER_URL = 'vendor/stockfish/stockfish-nnue-16-single.js';
+const WORKER_URL = 'vendor/stockfish/stockfish-18-lite-single.js';
 
 // Strength presets for the opponent in Play mode. Low levels also add randomness so beginners can win.
 export const LEVELS = [
