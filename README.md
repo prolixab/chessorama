@@ -35,6 +35,20 @@ To host it elsewhere, run `npm ci && npm run vendor` and upload the `public` fol
 - **Progress**: puzzle rating and estimated game rating over time, activity, completion and accuracy by part, and the monthly mistakes review (Part 8.4). Download or import a backup.
 - **Appendix**: glossary, tactical motif quick reference, printable game-review template, answer key.
 
+## Android app
+
+The same web app is packaged for Android with [Capacitor](https://capacitorjs.com) in `android/`. Everything runs on the phone, including Stockfish, and works offline.
+
+You need JDK 21 and the Android SDK (both come with Android Studio).
+
+```bash
+npm run android:sync      # copy public/ and the libraries into the Android project
+cd android
+./gradlew assembleDebug   # builds android/app/build/outputs/apk/debug/app-debug.apk
+```
+
+Install the APK on a phone with `adb install app-debug.apk`, or run `npm run android:open` to work in Android Studio. Run `android:sync` again after every change to `public/`. Publishing on Google Play needs a signed release build (`./gradlew bundleRelease` with your own signing key).
+
 ## Where progress is stored
 
 Progress is always kept in the browser's localStorage. On a static host that is the only copy: it stays on that device and browser, so use **Progress → Download progress** for a backup or to move to another device.

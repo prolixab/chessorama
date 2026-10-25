@@ -6,13 +6,23 @@
     "start": "node tools/serve.mjs",
     "vendor": "node tools/vendor.mjs",
     "validate": "node tools/validate.mjs",
-    "postinstall": "node tools/vendor.mjs"
+    "postinstall": "node tools/vendor.mjs",
+    "android:sync": "node tools/vendor.mjs && cap sync android",
+    "android:open": "cap open android"
   },
   "type": "module",
   "dependencies": {
+    "@capacitor/android": "8.5.2",
+    "@capacitor/core": "8.5.2",
     "chess.js": "^1.4.0",
     "chessground": "^9.2.1",
     "stockfish": "18.0.8"
   },
-  "private": true
+  "private": true,
+  "allowScripts": {
+    "stockfish@18.0.8": true
+  },
+  "devDependencies": {
+    "@capacitor/cli": "8.5.2"
+  }
 }
