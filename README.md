@@ -47,7 +47,19 @@ cd android
 ./gradlew assembleDebug   # builds android/app/build/outputs/apk/debug/app-debug.apk
 ```
 
-Install the APK on a phone with `adb install app-debug.apk`, or run `npm run android:open` to work in Android Studio. Run `android:sync` again after every change to `public/`. Publishing on Google Play needs a signed release build (`./gradlew bundleRelease` with your own signing key).
+Install the APK on a phone with `adb install app-debug.apk`, or run `npm run android:open` to work in Android Studio. Run `android:sync` again after every change to `public/`. ### Release builds
+
+Release APKs are signed with the key in `~/.chessy-signing/` (`chessy-release.jks` plus `signing.properties` with its passwords), which is deliberately kept out of the repository. **Back that folder up**: Android only accepts an update signed with the same key, so if it's lost, users must uninstall the app before they can install a new version. Set `CHESSY_SIGNING_PROPERTIES` to use a properties file somewhere else.
+
+The version comes from `package.json` (`versionCode` = major × 10000 + minor × 100 + patch). To publish a release:
+
+```bash
+npm version patch --no-git-tag-version   # bump the version
+npm run android:sync
+cd android && ./gradlew assembleRelease  # android/app/build/outputs/apk/release/app-release.apk
+```
+
+Then commit, and attach the APK to a GitHub release tagged `v<version>`. Signing certificate SHA-256: `5a8f6a024c64e7214e7791ce70ac7e4b89ad364229b4d3edcaaeaea2c289bfbf`.
 
 ## Where progress is stored
 
