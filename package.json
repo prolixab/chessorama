@@ -1,0 +1,18 @@
+{
+  "name": "chessy",
+  "version": "1.0.0",
+  "description": "Interactive chess training manual",
+  "scripts": {
+    "start": "node tools/serve.mjs",
+    "vendor": "node tools/vendor.mjs",
+    "validate": "node tools/validate.mjs",
+    "postinstall": "node tools/vendor.mjs"
+  },
+  "type": "module",
+  "dependencies": {
+    "chess.js": "^1.4.0",
+    "chessground": "^9.2.1",
+    "stockfish": "^16.0.0"
+  },
+  "private": true
+}
