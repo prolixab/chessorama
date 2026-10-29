@@ -1,0 +1,39 @@
+name: Android release
+
+# Builds the signed release APK with the shared store workflow in prolixab/appbutik.
+# Release: bump "version" in package.json, merge to main, then Actions → Android release →
+# Run workflow with "publish" ticked. A manual run without "publish" only uploads the APK as an
+# artifact. Pushing a v<version> tag that matches package.json also publishes.
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: 'Publish a release: tag main as v<package.json version> and create the GitHub Release'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: android-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    uses: prolixab/appbutik/.github/workflows/android-app-release.yml@main
+    with:
+      app-name: chessy
+      version-command: node -p "require('./package.json').version"
+      # Install scripts aren't needed; android:sync copies the browser builds into public/vendor.
+      install-command: npm ci --ignore-scripts
+      check-command: npm run vendor && node tools/validate.mjs --fast
+      # Without a signing.properties file Gradle leaves the release APK unsigned; the shared workflow signs it.
+      build-command: npm run android:sync && cd android && chmod +x gradlew && ./gradlew assembleRelease --no-daemon --max-workers=2
+      apk-path: android/app/build/outputs/apk/release/app-release-unsigned.apk
+      java-version: '21'
+      publish: ${{ inputs.publish == true }}
+    secrets: inherit
