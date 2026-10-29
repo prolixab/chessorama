@@ -51,7 +51,11 @@ Install the APK on a phone with `adb install app-debug.apk`, or run `npm run and
 
 Release APKs are signed with the key in `~/.chessy-signing/` (`chessy-release.jks` plus `signing.properties` with its passwords), which is deliberately kept out of the repository. **Back that folder up**: Android only accepts an update signed with the same key, so if it's lost, users must uninstall the app before they can install a new version. Set `CHESSY_SIGNING_PROPERTIES` to use a properties file somewhere else.
 
-The version comes from `package.json` (`versionCode` = major × 10000 + minor × 100 + patch). To publish a release:
+The version comes from `package.json` (`versionCode` = major × 10000 + minor × 100 + patch).
+
+**Publishing (normal route):** bump `version` in `package.json`, merge to `main`, then run **Actions → Android release** with **publish** ticked. `.github/workflows/android-release.yml` calls the shared release workflow in [prolixab/appbutik](https://github.com/prolixab/appbutik): it builds the APK, signs it with the same key (stored as the repository secrets `ANDROID_KEYSTORE_BASE64`, `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_ALIAS`, `ANDROID_KEY_PASSWORD`), verifies the certificate, tags `v<version>`, publishes the GitHub Release and tells Appbutik to update. Store the secrets once with `bash scripts/setup-app.sh prolixab/chessy ~/.chessy-signing/signing.properties` from the appbutik repository.
+
+To build a signed release locally instead:
 
 ```bash
 npm version patch --no-git-tag-version   # bump the version
