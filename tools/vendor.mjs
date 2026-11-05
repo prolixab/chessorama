@@ -9,13 +9,16 @@ const out = p => path.join(root, 'public', 'vendor', p);
 
 const copies = [
   ['chess.js/dist/esm/chess.js', 'chess.js'],
+  ['chess.js/LICENSE', 'licenses/chess.js.txt'],
   ['chessground/dist/chessground.min.js', 'chessground.min.js'],
+  ['chessground/LICENSE', 'licenses/chessground.txt'],
   ['chessground/assets/chessground.base.css', 'chessground.base.css'],
   ['chessground/assets/chessground.brown.css', 'chessground.brown.css'],
   ['chessground/assets/chessground.cburnett.css', 'chessground.cburnett.css'],
   // The lite single-threaded build: ~7 MB with the network built in, and no cross-origin isolation needed.
   ['stockfish/bin/stockfish-18-lite-single.js', 'stockfish/stockfish-18-lite-single.js'],
   ['stockfish/bin/stockfish-18-lite-single.wasm', 'stockfish/stockfish-18-lite-single.wasm'],
+  ['stockfish/Copying.txt', 'licenses/stockfish.txt'],
 ];
 
 for (const [from, to] of copies) {
@@ -23,3 +26,5 @@ for (const [from, to] of copies) {
   fs.copyFileSync(nm(from), out(to));
   console.log('vendored', to);
 }
+
+fs.copyFileSync(path.join(root, 'LICENSE'), out('licenses/chessorama.txt'));

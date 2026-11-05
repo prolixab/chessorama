@@ -1,4 +1,4 @@
-package se.prolixity.chessy;
+package se.prolixab.chessorama;
 
 import com.getcapacitor.BridgeActivity;
 

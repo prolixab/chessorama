@@ -1,0 +1,69 @@
+name: Release chessorama for Android
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: gradle
+      - name: Install Android SDK
+        run: sdkmanager 'platforms;android-36'
+      - name: Sync web assets and validate lessons
+        run: |
+          npm ci --ignore-scripts
+          version="$(node -p 'require("./package.json").version')"
+          tag="v${version}-build.${GITHUB_RUN_NUMBER}"
+          sed -i "s|https://github.com/prolixab/chessy/releases\"|https://github.com/prolixab/chessy/releases/tag/${tag}\"|" public/source.html
+          npm run android:sync
+          npm run validate
+      - name: Build signed APK and App Bundle
+        working-directory: android
+        env:
+          CHESSORAMA_KEYSTORE_BASE64: ${{ secrets.CHESSORAMA_KEYSTORE_BASE64 }}
+          CHESSORAMA_STORE_PASSWORD: ${{ secrets.CHESSORAMA_STORE_PASSWORD }}
+          CHESSORAMA_KEY_ALIAS: ${{ secrets.CHESSORAMA_KEY_ALIAS }}
+          CHESSORAMA_KEY_PASSWORD: ${{ secrets.CHESSORAMA_KEY_PASSWORD }}
+        run: |
+          set -euo pipefail
+          : "${CHESSORAMA_KEYSTORE_BASE64:?Set the Android keystore secret}"
+          export CHESSORAMA_KEYSTORE="$(mktemp)"
+          trap 'rm -f "$CHESSORAMA_KEYSTORE"' EXIT
+          printf '%s' "$CHESSORAMA_KEYSTORE_BASE64" | base64 --decode > "$CHESSORAMA_KEYSTORE"
+          unset CHESSORAMA_KEYSTORE_BASE64
+          bash ./gradlew --no-daemon :app:assembleRelease :app:bundleRelease \
+            -PreleaseVersionCode="$((10000 + GITHUB_RUN_NUMBER))"
+      - name: Publish GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          version="$(node -p 'require("./package.json").version')"
+          tag="v${version}-build.${GITHUB_RUN_NUMBER}"
+          cp android/app/build/outputs/apk/release/app-release.apk "chessorama-${tag}.apk"
+          cp android/app/build/outputs/bundle/release/app-release.aab "chessorama-${tag}.aab"
+          if draft="$(gh release view "$tag" --json isDraft --jq '.isDraft')"; then
+            if [[ "$draft" == true ]]; then
+              gh release upload "$tag" "chessorama-${tag}.apk" "chessorama-${tag}.aab" --clobber
+              gh release edit "$tag" --draft=false
+            fi
+          else
+            gh release create "$tag" "chessorama-${tag}.apk" "chessorama-${tag}.aab" \
+              --target "$GITHUB_SHA" --title "chessorama ${version} (build ${GITHUB_RUN_NUMBER})" --generate-notes
+          fi

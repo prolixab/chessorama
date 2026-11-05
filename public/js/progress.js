@@ -176,7 +176,7 @@ export function exportProgress() {
 
 export function importProgress(json) {
   const data = JSON.parse(json);
-  if (!data || typeof data !== 'object' || !data.exercises) throw new Error('This does not look like a Chessy progress file.');
+  if (!data || typeof data !== 'object' || !data.exercises) throw new Error('This does not look like a chessorama progress file.');
   state = Object.assign(blank(), data);
   save();
 }

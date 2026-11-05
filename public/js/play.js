@@ -260,7 +260,7 @@ export function toPgn(game) {
   const d = new Date(game.date);
   const date = `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}`;
   const you = 'You', sf = `Stockfish (${LEVELS[game.level].name})`;
-  const headers = { Event: 'Chessy training game', Site: 'Chessy', Date: date, White: game.color === 'w' ? you : sf, Black: game.color === 'w' ? sf : you, Result: game.result };
+  const headers = { Event: 'chessorama training game', Site: 'chessorama', Date: date, White: game.color === 'w' ? you : sf, Black: game.color === 'w' ? sf : you, Result: game.result };
   const c = new Chess();
   for (const m of game.moves) tryMove(c, m);
   for (const [k, v] of Object.entries(headers)) c.setHeader(k, v);

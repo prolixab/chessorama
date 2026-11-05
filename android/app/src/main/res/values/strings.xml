@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">Chessy</string>
-    <string name="title_activity_main">Chessy</string>
-    <string name="package_name">se.prolixity.chessy</string>
-    <string name="custom_url_scheme">se.prolixity.chessy</string>
+    <string name="app_name">chessorama</string>
+    <string name="title_activity_main">chessorama</string>
+    <string name="package_name">se.prolixab.chessorama</string>
+    <string name="custom_url_scheme">se.prolixab.chessorama</string>
 </resources>

@@ -64,4 +64,4 @@ http.createServer((req, res) => {
     });
     fs.createReadStream(file).pipe(res);
   });
-}).listen(port, () => console.log(`Chessy running at http://localhost:${port}`));
+}).listen(port, () => console.log(`chessorama running at http://localhost:${port}`));

@@ -8,15 +8,30 @@ def (vMajor, vMinor, vPatch) = appVersion.tokenize('.').collect { it.toInteger()
 def signingFile = file(System.getenv('CHESSY_SIGNING_PROPERTIES') ?: "${System.getProperty('user.home')}/.chessy-signing/signing.properties")
 def signing = new Properties()
 if (signingFile.exists()) signingFile.withInputStream { signing.load(it) }
+def ciKeystore = System.getenv('CHESSORAMA_KEYSTORE')
+if (ciKeystore) {
+    signing.setProperty('storeFile', ciKeystore)
+    ['storePassword': 'CHESSORAMA_STORE_PASSWORD',
+     'keyAlias': 'CHESSORAMA_KEY_ALIAS',
+     'keyPassword': 'CHESSORAMA_KEY_PASSWORD'].each { property, variable ->
+        def value = System.getenv(variable)
+        if (!value) throw new GradleException("Missing signing variable: ${variable}")
+        signing.setProperty(property, value)
+    }
+}
+
+def releaseVersionCode = providers.gradleProperty('releaseVersionCode')
+    .map { it.toInteger() }
+    .getOrElse(vMajor * 10000 + vMinor * 100 + vPatch)
 
 android {
-    namespace = "se.prolixity.chessy"
+    namespace = "se.prolixab.chessorama"
     compileSdk = rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "se.prolixity.chessy"
+        applicationId "se.prolixab.chessorama"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode vMajor * 10000 + vMinor * 100 + vPatch
+        versionCode releaseVersionCode
         versionName appVersion
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {

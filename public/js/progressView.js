@@ -120,7 +120,7 @@ export function renderProgress(root) {
     root.querySelector('[data-act=export]').onclick = () => {
       const a = document.createElement('a');
       a.href = URL.createObjectURL(new Blob([exportProgress()], { type: 'application/json' }));
-      a.download = `chessy-progress-${new Date().toISOString().slice(0, 10)}.json`;
+      a.download = `chessorama-progress-${new Date().toISOString().slice(0, 10)}.json`;
       a.click();
     };
     root.querySelector('input[type=file]').onchange = async e => {
