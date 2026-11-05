@@ -30,7 +30,7 @@ jobs:
           npm ci --ignore-scripts
           version="$(node -p 'require("./package.json").version')"
           tag="v${version}-build.${GITHUB_RUN_NUMBER}"
-          sed -i "s|https://github.com/prolixab/chessy/releases\"|https://github.com/prolixab/chessy/releases/tag/${tag}\"|" public/source.html
+          sed -i "s|https://github.com/prolixab/chessorama/releases\"|https://github.com/prolixab/chessorama/releases/tag/${tag}\"|" public/source.html
           npm run android:sync
           npm run validate
       - name: Build signed APK and App Bundle
